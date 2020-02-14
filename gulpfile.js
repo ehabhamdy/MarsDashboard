@@ -32,6 +32,10 @@ gulp.task("watch", () =>
   gulp.watch(SOURCES, gulp.series("babelify"))
 );
 
+gulp.task("watchClient", () =>
+  gulp.watch("src/public/*js", gulp.series("client"))
+);
+
 gulp.task("nodemon", () =>
   nodemon({
     script: MAIN,
@@ -44,4 +48,4 @@ gulp.task("client", () =>
 );
 
 //gulp.task("default", ["babelify", "lint"]);
-gulp.task("dev", gulp.parallel(["client", "babelify", "nodemon", "watch"]));
+gulp.task("dev", gulp.parallel(["client", "babelify","nodemon", "watch", "watchClient"]));

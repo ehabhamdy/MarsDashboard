@@ -21,12 +21,6 @@ gulp.task("babelify", () =>
   }))
   .pipe(gulp.dest(DEST_DIR+"/server/")));
 
-gulp.task("lint", function () {
-  gulp.src(SOURCES)
-    .pipe(eslint())
-    .pipe(eslint.format())
-    .pipe(eslint.failAfterError());
-});
 
 gulp.task("watch", () =>
   gulp.watch(SOURCES, gulp.series("babelify"))

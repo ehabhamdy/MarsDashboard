@@ -69,8 +69,9 @@ const App = (state) => {
     return `
         <header></header>
         <main>
-        
             ${Greeting(store.user.name)}
+            ${RoverSelector(current_rover)}
+            ${RoverInformation(current_rover, rover)}
             <section>
                 <h3>Put things on the page!</h3>
                 <p>Here is an example section.</p>
@@ -92,6 +93,8 @@ const App = (state) => {
 // listening for load event because page should load before any JS is called
 window.addEventListener('load', () => {
     render(root, store)
+
+
 })
 
 // ------------------------------------------------------  COMPONENTS
@@ -101,7 +104,7 @@ const Greeting = (name) => {
     console.log("Greeting component called")
     if (name) {
         return `
-            <h1>Welcome, ${name}!</h1>
+            <h1>Welcome to Mars Dashboard ${name}!</h1>
         `
     }
 
@@ -140,12 +143,21 @@ const ImageOfTheDay = (apod) => {
     }
 }
 
-const RoverSelector = () => {
+
+function changeRover() {
+    const selectedRover = document.getElementById("roverSelector").value;
+    console.log("You selected: " + selectedRover);
+
+    updateCurrentRover(selectedRover, store)
+  }
+
+const RoverSelector = (current_rover) => {
     rovers_text = ""
     store.rovers.map(rover => rovers_text += `<p>${rover}</p>`)
     return (`
-        <select id="roverSelector">
-            ${store.rovers.map(rover => `<option value="${rover}">${rover}</option>`)}
+        <select id="roverSelector" onchange="changeRover()">
+            ${store.rovers.map(rover => 
+                (rover === current_rover) ? `<option value="${rover}" selected>${rover}</option>` : `<option value="${rover}">${rover}</option>` )}
         </select>
     `)
 }
@@ -179,7 +191,7 @@ const Carousel = (recent_photos) => {
 
     console.log("Corasel component ", recent_photos)
     return (`
-        ${recent_photos.map(photo => `<img src="${photo}">`)}
+        ${recent_photos.map(photo => `<img width="100%" src="${photo}">`)}
     `)
 }
 
@@ -218,6 +230,12 @@ const getRoverMaxDate = async (state) => {
     //updateStore(store, { max_date })
 }
 
+const updateCurrentRover = async (new_rover, state) => { 
+    store.current_rover = new_rover
+    getRoverInfo(new_rover, store)
+    getRoverRecentImages(store)
+}
+
 const getRoverInfo = async (current_rover, state) => {
     // make the request with varies rover names
     //Rovers names are
@@ -237,7 +255,7 @@ const getRoverInfo = async (current_rover, state) => {
     rover = dateResult.info.photo_manifest
     console.log(rover)
 
-    console.log("getRoverInfo: store will be updated")
+    console.log("getRoverInfo: store will be updated for", current_rover)
     updateStore(store, { rover })
 }
 

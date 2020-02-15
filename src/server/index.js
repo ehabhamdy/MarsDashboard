@@ -6,7 +6,7 @@ import {
 } from 'rxjs'
 import { ajax, AjaxResponse } from "rxjs/ajax";
 
-import { switchMap, mergeMap, map, tap, toPromise, filter, flatMap, scan } from 'rxjs/operators';
+import { switchMap, mergeMap, map, tap, toPromise, filter, flatMap, scan, reduce } from 'rxjs/operators';
 
 import express, { response } from 'express';
 import bodyparser from 'body-parser'
@@ -96,7 +96,7 @@ function createXHR() {
     return new XMLHttpRequest();
 }
 
-
+// Returns list of strings of recent images for a given rover
 app.get('/roverRecent', async (req, res) => {
   const max_date = req.query['date']
   const rover_name = req.query['rover']
@@ -113,7 +113,7 @@ app.get('/roverRecent', async (req, res) => {
       .pipe(
         switchMap(AjaxResponse => AjaxResponse.response.photos),
         map(photo => photo.img_src),
-        scan((acc, value) => [...acc, value], []),
+        reduce((acc, value) => [...acc, value], []),
         tap(photo => console.log(photo))
       );
   

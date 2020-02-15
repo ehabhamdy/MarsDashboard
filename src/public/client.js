@@ -5,7 +5,7 @@ let store = {
     apod: '',
     rovers: ['curiosity', 'opportunity', 'spirit'],
     recent_photos: [],
-    current_rover: 'spirit',
+    current_rover: 'curiosity',
     rover: ''
 }
 
@@ -71,7 +71,6 @@ const App = (state) => {
         <main>
         
             ${Greeting(store.user.name)}
-            ${RoverInformation(current_rover, rover)}
             <section>
                 <h3>Put things on the page!</h3>
                 <p>Here is an example section.</p>
@@ -83,7 +82,6 @@ const App = (state) => {
                     explanation are returned. These keywords could be used as auto-generated hashtags for twitter or instagram feeds;
                     but generally help with discoverability of relevant imagery.
                 </p>
-                ${ImageOfTheDay(apod)}
                 ${Carousel(recent_photos)}
             </section>
         </main>
@@ -181,7 +179,7 @@ const Carousel = (recent_photos) => {
 
     console.log("Corasel component ", recent_photos)
     return (`
-        ${recent_photos.map(photo => `<img src="${photo.img_src}">`)}
+        ${recent_photos.map(photo => `<img src="${photo}">`)}
     `)
 }
 
@@ -257,9 +255,9 @@ const getRoverRecentImages = async (state) => {
     const dateResult = await dateResponse.json()
 
     max_date = dateResult.info.photo_manifest.max_date
-    console.log("dsjds jkdjsk jdsjkd jsj",max_date)
+    console.log("getRoverRecentImages with max date",max_date)
     const response = await fetch(`http://localhost:3000/roverRecent?rover=${state.current_rover}&date=${max_date}`)
     const result = await response.json()
-    recent_photos = result.data.photos
+    recent_photos = result.data
     updateStore(store, { max_date, recent_photos })
 }

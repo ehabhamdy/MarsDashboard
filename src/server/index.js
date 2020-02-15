@@ -2,14 +2,19 @@ import "core-js/stable";
 import "regenerator-runtime/runtime";
 
 import {
-  Observable
+  Observable, of, from
 } from 'rxjs'
-import express from 'express';
+import { ajax, AjaxResponse } from "rxjs/ajax";
+
+import { switchMap, mergeMap, map, tap, toPromise, filter, flatMap, scan } from 'rxjs/operators';
+
+import express, { response } from 'express';
 import bodyparser from 'body-parser'
 import path from 'path'
 import dotenv from 'dotenv'
 
 import nodefetch from 'node-fetch'
+const XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 
 dotenv.config()
 console.log(process.env.API_KEY)
@@ -75,33 +80,90 @@ app.get('/rover', async (req, res) => {
 
 app.get('/roverInfo/:rover_name', async (req, res) => {
   console.log(req.params.rover_name)
-  const roverInfoObserver$ = 
-      getObservableFromFetch(
-        `https://api.nasa.gov/mars-photos/api/v1/manifests/${req.params.rover_name}?api_key=${process.env.API_KEY}`
-        );
+  const roverInfoObserver$ =
+    getObservableFromFetch(
+      `https://api.nasa.gov/mars-photos/api/v1/manifests/${req.params.rover_name}?api_key=${process.env.API_KEY}`
+    );
 
-    roverInfoObserver$.subscribe(info => {
+  roverInfoObserver$.subscribe(info => {
     res.send({
       info
     })
   })
 })
 
+function createXHR() {
+    return new XMLHttpRequest();
+}
+
+
 app.get('/roverRecent', async (req, res) => {
   const max_date = req.query['date']
   const rover_name = req.query['rover']
+  console.log("/roverRecent route", max_date, rover_name)
+  //console.log(`https://api.nasa.gov/mars-photos/api/v1/rovers/${rover_name}/photos?earth_date=${max_date}&api_key=${process.env.API_KEY}`)
+  // const roverInfoObserver$ =
+  //   getObservableFromFetch(
+  //     `https://api.nasa.gov/mars-photos/api/v1/rovers/${rover_name}/photos?earth_date=${max_date}&api_key=${process.env.API_KEY}`
+  //   )
+  //   .pipe(
+  //     map(response => response.photos),
+  //     //map(data => data.img_src),
+  //     tap(photo => console.log(photo))
+      
+  //   );
+  const ajaxRequestCOnfigurations = {
+    createXHR,
+    url: `https://api.nasa.gov/mars-photos/api/v1/rovers/${rover_name}/photos?earth_date=${max_date}&api_key=${process.env.API_KEY}`,
+    crossDomain: true,
+    withCredentials: false,
+    method: 'GET',
+  }
 
-  const roverInfoObserver$ = 
-      getObservableFromFetch(
-        `https://api.nasa.gov/mars-photos/api/v1/rovers/${rover_name}/photos?earth_date=${max_date}&api_key=${process.env.API_KEY}`
-        );
+  const roverInfoObserver$ = ajax(ajaxRequestCOnfigurations)
+      .pipe(
+        switchMap(AjaxResponse => AjaxResponse.response.photos),
+        map(photo => photo.img_src),
+        scan((acc, value) => [...acc, value], [])
+        //tap(photo => console.log(photo))
+      );
 
-    roverInfoObserver$.subscribe(data => {
+  //roverInfoObserver$.subscribe(data => console.log(data))
+  
+    const roverInfoPromise = roverInfoObserver$.toPromise()
+  // roverInfoObserver$.subscribe(data => {
+  //   res.send({
+  //     data
+  //   })
+  // })
+
+  // const roverInfoPromise = roverInfoObserver$.toPromise()
+
+  roverInfoPromise.then(data => {
+    console.log(data)
     res.send({
       data
     })
-  })
+  });
+
 })
+
+// app.get('/roverRecent', async (req, res) => {
+//   const max_date = req.query['date']
+//   const rover_name = req.query['rover']
+//   console.log("/roverRecent route", max_date, rover_name)
+//   //console.log(`https://api.nasa.gov/mars-photos/api/v1/rovers/${rover_name}/photos?earth_date=${max_date}&api_key=${process.env.API_KEY}`)
+//   const roverInfoObserver$ =
+//     getObservableFromFetch(
+//       `https://api.nasa.gov/mars-photos/api/v1/rovers/${rover_name}/photos?earth_date=${max_date}&api_key=${process.env.API_KEY}`
+//     ).pipe(tap(data => console.log(data)))
+
+//   roverInfoObserver$.subscribe(data => {
+//     res.send({
+//       data
+//     })
+//   })
+// })
 
 
 //Rovers names are

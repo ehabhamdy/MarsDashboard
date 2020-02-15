@@ -27,7 +27,7 @@ gulp.task("watch", () =>
 );
 
 gulp.task("watchClient", () =>
-  gulp.watch("src/public/*js", gulp.series("client"))
+  gulp.watch("src/public/**/*", gulp.series("client"))
 );
 
 gulp.task("nodemon", () =>

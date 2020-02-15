@@ -1,3 +1,19 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat&display=swap');
+
+@import url('https://fonts.googleapis.com/css?family=Odibee+Sans&display=swap');
+
+@import url('https://fonts.googleapis.com/css?family=Montserrat|Odibee+Sans|Russo+One&display=swap');
+
+/* -------------------  All  --------------------- */
+h1 {
+  font-family: 'Russo One', sans-serif;
+  text-align: center;
+}
+
+#root {
+  font-family: 'Montserrat', sans-serif;
+}
+
 /* -------------------  MOBILE  --------------------- */
 
 body {
@@ -13,11 +29,28 @@ header {
 
 main {
   flex: 1;
-  padding: 20px;
+  padding: 10px;
 }
 
 footer {
   /* footer styles */
+}
+
+#root {
+  border: 2px solid #982ce0;
+  border-radius: 12px;
+  background-image: url("../pattern.png");
+  background-repeat: repeat;
+}
+
+#roverSelector {
+  padding-left: 20px;
+  width: 100%;
+  height: 40px;
+  font-size: 20px;
+  background-color: hsla(264, 47%, 69%, 0.3);
+  border: 1px blueviolet;
+  border-radius: 5px;
 }
 
 /* -------------------  TABLET  --------------------- */

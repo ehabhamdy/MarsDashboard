@@ -231,9 +231,9 @@ const getRoverMaxDate = async (state) => {
 }
 
 const updateCurrentRover = async (new_rover, state) => { 
-    store.current_rover = new_rover
-    getRoverInfo(new_rover, store)
-    getRoverRecentImages(store)
+    state.current_rover = new_rover
+    getRoverInfo(new_rover, state)
+    getRoverRecentImages(state)
 }
 
 const getRoverInfo = async (current_rover, state) => {

@@ -84,7 +84,7 @@ RoverInformation = (rover_name, rover) => {
             <h2> Rover Information </h2>
             <div class="info-container">
                 <div class="card">
-                    <h3> Rover Max Date </h3>
+                    <h3> Rover Recent Images Date </h3>
                     <p>${rover.max_date}</p>
                 </div>
                 <div class="card">

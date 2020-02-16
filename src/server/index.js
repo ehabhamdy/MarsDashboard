@@ -14,29 +14,24 @@ import {
   tap,
   reduce
 } from 'rxjs/operators';
-
 import express from 'express';
 import bodyparser from 'body-parser'
 import path from 'path'
 import dotenv from 'dotenv'
-
 import nodefetch from 'node-fetch'
-const XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 
-dotenv.config()
-console.log(process.env.API_KEY)
+dotenv.config();
+const XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 const app = express();
-const port = 3000
+const port = 3000;
 
 app.use(bodyparser.urlencoded({
   extended: false
 }))
 
-app.use(bodyparser.json())
+app.use(bodyparser.json());
 
-console.log(path.join(__dirname, '../src/public'))
-
-app.use('/', express.static(path.join(__dirname, '../public')))
+app.use('/', express.static(path.join(__dirname, '../public')));
 
 app.use("/test", function (req, res) {
   res.setHeader('Content-Type', 'application/json');

@@ -30,7 +30,7 @@ const App = (state) => {
     return `
         <header></header>
         <main>
-            ${Greeting(store.get('user.name'))}
+            ${Greeting(state.toJS().user.name)}
             ${RoverSelector(current_rover)}
             ${RoverInformation(current_rover, rover)}
             ${Carousel(recent_photos, current_rover)}

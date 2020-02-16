@@ -1,4 +1,4 @@
-let store = {
+let store = Immutable.Map({
     user: {
         name: "Student"
     },
@@ -7,13 +7,15 @@ let store = {
     recent_photos: [],
     current_rover: 'curiosity',
     rover: ''
-}
+})
 
 // add our markup to the page
 const root = document.getElementById('root')
 
-const updateStore = (store, newState) => {
-    store = Object.assign(store, newState)
+const updateStore = (state, newState) => {
+    //store = Object.assign(store, newState)
+
+    store = state.merge(newState)
     render(root, store)
 }
 
@@ -59,17 +61,14 @@ const render = async (root, state) => {
 
 // create content
 const App = (state) => {
-    let {
-        rover,
-        recent_photos,
-        current_rover,
-        apod
-    } = state
+    const rover = state.toJS().rover
+    const recent_photos = state.toJS().recent_photos
+    const current_rover = state.toJS().current_rover
 
     return `
         <header></header>
         <main>
-            ${Greeting(store.user.name)}
+            ${Greeting(store.get('user.name'))}
             ${RoverSelector(current_rover)}
             ${RoverInformation(current_rover, rover)}
             ${Carousel(recent_photos, current_rover)}
@@ -139,10 +138,10 @@ function changeRover() {
 
 const RoverSelector = (current_rover) => {
     rovers_text = ""
-    store.rovers.map(rover => rovers_text += `<p>${rover}</p>`)
+    store.get('rovers').map(rover => rovers_text += `<p>${rover}</p>`)
     return (`
         <select id="roverSelector" onchange="changeRover()">
-            ${store.rovers.map(rover => 
+            ${store.get('rovers').map(rover => 
                 (rover === current_rover) ? `<option value="${rover}" selected>${rover}</option>` : `<option value="${rover}">${rover}</option>` )}
         </select>
     `)
@@ -240,9 +239,6 @@ const getRoverInfo = async (current_rover, state) => {
     //Rovers names are
     // Curiosity, Opportunity, and Spirit 
 
-    let {
-        rover
-    } = state
 
     const dateResponse = await fetch(`http://localhost:3000/roverInfo/${current_rover}`)
     const dateResult = await dateResponse.json()
@@ -251,7 +247,7 @@ const getRoverInfo = async (current_rover, state) => {
     // landing_date = dateResult.info.photo_manifest.landing_date
     // launch_date = dateResult.info.photo_manifest.launch_date
     // total_photos = dateResult.info.photo_manifest.total_photos
-    rover = dateResult.info.photo_manifest
+    let rover = dateResult.info.photo_manifest
     console.log(rover)
 
     console.log("getRoverInfo: store will be updated for", current_rover)
@@ -263,18 +259,13 @@ const getRoverRecentImages = async (state) => {
     //Rovers names are
     // Curiosity, Opportunity, and Spirit 
 
-    let {
-        max_date,
-        recent_photos
-    } = state
-
-    const dateResponse = await fetch(`http://localhost:3000/roverInfo/${state.current_rover}`)
+    const dateResponse = await fetch(`http://localhost:3000/roverInfo/${state.get('current_rover')}`)
     const dateResult = await dateResponse.json()
 
-    max_date = dateResult.info.photo_manifest.max_date
+    let max_date = dateResult.info.photo_manifest.max_date
     console.log("getRoverRecentImages with max date",max_date)
-    const response = await fetch(`http://localhost:3000/roverRecent?rover=${state.current_rover}&date=${max_date}`)
+    const response = await fetch(`http://localhost:3000/roverRecent?rover=${state.get('current_rover')}&date=${max_date}`)
     const result = await response.json()
-    recent_photos = result.data
+    let recent_photos = result.data
     updateStore(store, { max_date, recent_photos })
 }

@@ -18,19 +18,20 @@ const updateStore = (state, newState) => {
 }
 
 const render = async (root, state) => {
-    root.innerHTML = App(state)
+    root.innerHTML = App(state.toJS())
 }
 
 // create content
 const App = (state) => {
-    const rover = state.toJS().rover
-    const recent_photos = state.toJS().recent_photos
-    const current_rover = state.toJS().current_rover
+    const rover = state.rover;
+    const recent_photos = state.recent_photos;
+    const current_rover = state.current_rover;
+    const username = state.user.name;
 
     return `
         <header></header>
         <main>
-            ${Greeting(state.toJS().user.name)}
+            ${Greeting(username)}
             ${RoverSelector(current_rover)}
             ${RoverInformation(current_rover, rover)}
             ${Carousel(recent_photos, current_rover)}

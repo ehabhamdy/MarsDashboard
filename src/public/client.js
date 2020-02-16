@@ -64,6 +64,9 @@ const App = (state) => {
     const rover = state.toJS().rover
     const recent_photos = state.toJS().recent_photos
     const current_rover = state.toJS().current_rover
+    console.log("-----------------")
+    console.log(state.toJS())
+    console.log("-----------------")
 
     return `
         <header></header>
@@ -228,10 +231,12 @@ const getRoverMaxDate = async (state) => {
     //updateStore(store, { max_date })
 }
 
-const updateCurrentRover = async (new_rover, state) => { 
-    state.current_rover = new_rover
-    getRoverInfo(new_rover, state)
-    getRoverRecentImages(state)
+const updateCurrentRover = async (current_rover, state) => { 
+    //state.current_rover = new_rover
+    const newState = state.set('current_rover', current_rover);
+    updateStore(state, { current_rover })
+    getRoverInfo(current_rover, newState)
+    getRoverRecentImages(newState)
 }
 
 const getRoverInfo = async (current_rover, state) => {

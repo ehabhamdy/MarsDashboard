@@ -1,21 +1,3 @@
-ob = {
-    a: "1",
-    b: "2",
-    c: "3"
-}
-console.log(Object.keys(ob))
-
-function objectReducer(data) {
-    const keys = Object.keys(data);
-    let current = 0
-    const reduce = function (data) {
-
-    };
-}
-
-
-
-
 let store = Immutable.Map({
     user: {
         name: "Student"

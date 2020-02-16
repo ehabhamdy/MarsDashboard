@@ -72,19 +72,7 @@ const App = (state) => {
             ${Greeting(store.user.name)}
             ${RoverSelector(current_rover)}
             ${RoverInformation(current_rover, rover)}
-            <section>
-                <h3>Put things on the page!</h3>
-                <p>Here is an example section.</p>
-                <p>
-                    One of the most popular websites at NASA is the Astronomy Picture of the Day. In fact, this website is one of
-                    the most popular websites across all federal agencies. It has the popular appeal of a Justin Bieber video.
-                    This endpoint structures the APOD imagery and associated metadata so that it can be repurposed for other
-                    applications. In addition, if the concept_tags parameter is set to True, then keywords derived from the image
-                    explanation are returned. These keywords could be used as auto-generated hashtags for twitter or instagram feeds;
-                    but generally help with discoverability of relevant imagery.
-                </p>
-                ${Carousel(recent_photos)}
-            </section>
+            ${Carousel(recent_photos, current_rover)}
         </main>
         <footer></footer>
     `
@@ -93,8 +81,6 @@ const App = (state) => {
 // listening for load event because page should load before any JS is called
 window.addEventListener('load', () => {
     render(root, store)
-
-
 })
 
 // ------------------------------------------------------  COMPONENTS
@@ -172,26 +158,39 @@ RoverInformation = (rover_name, rover) => {
     } else  {
         return (`
             <h2> Rover Information </h2>
-            <ul> 
-                <li> <lable> Rover Max Date: <label> ${rover.max_date} </li>
-                <li> <lable> Rover Landing Date: <label> ${rover.landing_date} </li>
-                <li> <lable> Rover Launch Date: <label> ${rover.launch_date} </li>
-                <li> <lable> Rover Status: <label> ${rover.status} </li>
-            </ul>
-            
-             
+            <div class="info-container">
+                <div class="card">
+                    <h3> Rover Max Date </h3>
+                    <p>${rover.max_date}</p>
+                </div>
+                <div class="card">
+                    <h3> Rover Landing Date </h3>
+                    <p>${rover.landing_date}</p>
+                </div>
+                <div class="card">
+                    <h3> Rover Launch Date </h3>
+                    <p>${rover.launch_date}</p>
+                </div>
+                <div class="card">
+                    <h3> Rover Status </h3>
+                    <p>${rover.status}</p>
+                </div>
+            </div>
         `)
     }
 }
 
-const Carousel = (recent_photos) => {
+const Carousel = (recent_photos, current_rover) => {
     if (recent_photos.length === 0) {
         getRoverRecentImages(store)
     }
 
     console.log("Corasel component ", recent_photos)
     return (`
-        ${recent_photos.map(photo => `<img width="100%" src="${photo}">`)}
+        <h2> Recent ${current_rover} Images </h2>
+        <div class="image-container">
+            ${recent_photos.map(photo => `<img class="rover-img" src="${photo}">`)}
+        </div>
     `)
 }
 

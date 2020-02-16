@@ -1,3 +1,21 @@
+ob = {
+    a: "1",
+    b: "2",
+    c: "3"
+}
+console.log(Object.keys(ob))
+
+function objectReducer(data) {
+    const keys = Object.keys(data);
+    let current = 0
+    const reduce = function (data) {
+
+    };
+}
+
+
+
+
 let store = Immutable.Map({
     user: {
         name: "Student"
@@ -62,8 +80,8 @@ const Greeting = (name) => {
 function changeRover() {
     const selectedRover = document.getElementById("roverSelector").value;
 
-    updateCurrentRover(selectedRover, store)
-  }
+    updateCurrentRover(selectedRover, store, getRoverInfo, getRoverRecentImages)
+}
 
 const RoverSelector = (current_rover) => {
     rovers_text = ""
@@ -77,9 +95,9 @@ const RoverSelector = (current_rover) => {
 }
 
 RoverInformation = (rover_name, rover) => {
-    if( rover === '' ) {
+    if (rover === '') {
         getRoverInfo(rover_name, store)
-    } else  {
+    } else {
         return (`
             <h2> Rover Information </h2>
             <div class="info-container">
@@ -119,28 +137,48 @@ const Carousel = (recent_photos, current_rover) => {
 
 // ------------------------------------------------------  API CALLS
 
-const updateCurrentRover = async (current_rover, state) => { 
+
+// Higher order function that takes two function functions in its argument
+const updateCurrentRover = async (current_rover, state, updateReoverInfo, updateRoverRecentImages) => {
     const newState = state.set('current_rover', current_rover);
-    updateStore(state, { current_rover })
-    getRoverInfo(current_rover, newState)
-    getRoverRecentImages(newState)
+    updateStore(state, {
+        current_rover
+    })
+    updateReoverInfo(current_rover, newState)
+    updateRoverRecentImages(newState)
+}
+
+// Higher order function that returns a function
+function fetchJsonData(url) {
+    const getResponse = async function () {
+        const dataResponse = await fetch(url)
+        const jsonData = await dataResponse.json()
+        return jsonData
+    }
+
+    return getResponse
 }
 
 const getRoverInfo = async (current_rover, state) => {
-    const dateResponse = await fetch(`http://localhost:3000/roverInfo/${current_rover}`)
-    const dateResult = await dateResponse.json()
+    const dateResult = fetchJsonData(`http://localhost:3000/roverInfo/${current_rover}`)
 
-    let rover = dateResult.info.photo_manifest
-   
-    updateStore(store, { rover })
+    const data = await dateResult()
+    let rover = data.info.photo_manifest
+
+    updateStore(store, {
+        rover
+    })
 }
 
 const getRoverRecentImages = async (state) => {
-    const dateResponse = await fetch(`http://localhost:3000/roverInfo/${state.get('current_rover')}`)
-    const dateResult = await dateResponse.json()
-    const max_date = dateResult.info.photo_manifest.max_date
-    const response = await fetch(`http://localhost:3000/roverRecent?rover=${state.get('current_rover')}&date=${max_date}`)
-    const result = await response.json()
+    const infoDataResponse = fetchJsonData(`http://localhost:3000/roverInfo/${state.get('current_rover')}`)
+    const data = await infoDataResponse()
+    const max_date = data.info.photo_manifest.max_date
+    const imageDataResponse = fetchJsonData(`http://localhost:3000/roverRecent?rover=${state.get('current_rover')}&date=${max_date}`)
+    const result = await imageDataResponse()
     let recent_photos = result.data
-    updateStore(store, { max_date, recent_photos })
+    updateStore(store, {
+        max_date,
+        recent_photos
+    })
 }

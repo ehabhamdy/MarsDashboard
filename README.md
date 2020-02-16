@@ -1,4 +1,11 @@
 # Functional Programming with Javascript 
+## How to run the project:
+1. Run `npm install` in the root director of the project.
+2. Make sure to create a `.env` file and add your Nasa API key to it: `API_KEY=YOUR_API_KEY`.
+3. You can either start the project by running one of the following commands:
+    * `npx gulp dev`
+    * `npm start`
+
 
 ## Student Instructions
 
@@ -67,7 +74,3 @@ Some ideas might be to incorporate the Astronomy Photo of the Day into your desi
 ### Design
 
 Create an image gallery slider, put a full page background image, code some falling asteroids with css animations ... the visual design of this UI is up to you! There is a lot of awesome dashboard design inspiration out there. You have already been given a good start with a mobile-first stylesheet already set up for you. 
-
-
-
-# MarsDashboard

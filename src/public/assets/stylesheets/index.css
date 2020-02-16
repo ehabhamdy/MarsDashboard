@@ -71,6 +71,10 @@ h3 {
   justify-content: space-evenly;
 }
 
+.special {
+  color: rgb(109, 1, 136)
+}
+
 /* -------------------  MOBILE  --------------------- */
 .rover-img {
   width: 300px;

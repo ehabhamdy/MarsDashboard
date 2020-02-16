@@ -50,7 +50,7 @@ window.addEventListener('load', () => {
 const Greeting = (name) => {
     if (name) {
         return `
-            <h1>Welcome to Mars Dashboard ${name}!</h1>
+            <h1>Welcome to <span class="special"> Mars Dashboard </span> ${name}!</h1>
         `
     }
 

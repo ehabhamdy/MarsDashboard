@@ -9,8 +9,11 @@ body {
   background-color: rgb(241, 239, 241);
 }
 
-h1 {
+h1, h2, h3 {
   font-family: 'Russo One', sans-serif;
+}
+
+h1 {
   text-align: center;
 }
 h2 {
@@ -52,6 +55,10 @@ h3 {
   padding: 20px;
   margin: 20px;
   border-radius: 10px;
+}
+
+.card p {
+  font-size: 20px;
 }
 
 .card h3 {

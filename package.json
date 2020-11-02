@@ -17,7 +17,7 @@
     "gulp-cached": "^1.1.1",
     "gulp-eslint": "^6.0.0",
     "immutable": "^4.0.0-rc.12",
-    "node-fetch": "^2.6.0",
+    "node-fetch": "^2.6.1",
     "regenerator-runtime": "^0.13.3",
     "rxjs": "^6.5.4",
     "xmlhttprequest": "^1.8.0"
@@ -28,7 +28,7 @@
     "@babel/preset-env": "^7.8.4",
     "gulp": "^4.0.2",
     "gulp-babel": "^8.0.0",
-    "gulp-nodemon": "^2.4.2",
+    "gulp-nodemon": "^2.5.0",
     "gulp-plumber": "^1.2.1",
     "nodemon": "^2.0.2"
   }
